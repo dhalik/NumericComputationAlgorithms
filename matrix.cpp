@@ -5,6 +5,7 @@ using namespace std;
 
 // construct a matrix of size m = cols x n = rows
 Matrix::Matrix(int cols, int rows):cols(cols), rows(rows){
+    isLU = false;
     values = new vector<vector<double>* >();
     for (int i = 0; i < rows; i++){
         vector<double>* curr = new vector<double>();
@@ -17,7 +18,7 @@ Matrix::Matrix(int cols, int rows):cols(cols), rows(rows){
 Matrix::Matrix(const vector<vector<double> > & _values){
     this->rows= _values.size();
     this->cols = _values[0].size();
-
+    isLU = false;
     values = new vector<vector<double>* >();
     for (int i = 0; i < rows; i++){
         vector<double>* curr = new vector<double>();
@@ -28,6 +29,7 @@ Matrix::Matrix(const vector<vector<double> > & _values){
 }
 
 Matrix::Matrix(const Matrix& m){
+    isLU = false;
     values = new vector<vector<double> * >();
     for (int i = 0; i < m.rowSize(); i++){
         vector<double> * row = m.getRow(i);
@@ -72,51 +74,42 @@ double Matrix::get(int row, int col){
     return (*(*values)[row])[col];
 }
 
+//subtract two vectors
 vector<double> sub(vector<double> a, vector<double> b){
     for (auto it = a.begin(); it != a.end(); it++)
         *it - b[it - a.begin()];
     return a;
 }
 
+//scale a given vector by s
 void scale(double s, vector<double>& a){
     for (auto it = a.begin(); it != a.end(); it++)
         *it *= s;
 }
 
-Matrix* Matrix::rref() const {
-    Matrix * ret = new Matrix(*this);
-    int leading = 0;
-    for (int i = 0; i < rows; i++){
-        if (leading == cols)
-            break;
-        int row = i;
-        while (ret->get(row, leading) == 0){
-            row++;
-            if (row == rows){
-                row = i;
-                leading++;
-                //no more leading ones
-                if (leading == cols){
-                    leading--;
-                    break;
-                }
+Matrix* Matrix::lu(){
+    vector<vector<double > > newMat;
+    vector<vector<double >* > col;
+    for (int j = 0; j < this->rowSize(); j++){
+        vector<double> * col = this->getRow(j);
+        newMat.push_back(*col);
+        delete col;
+    }
+
+    for (int i = 0; i < newMat.begin()->size(); i++){
+        // i is the current pivot
+        double pivot = newMat[i][i];
+        for (int row = i + 1; row < newMat.size(); row++){
+            newMat[row][i] = newMat[row][i] / pivot;
+            //adjust row value for pivot value change
+            for (int col = i + 1; col < newMat.begin()->size(); col++){
+                newMat[row][col] = newMat[row][col] - newMat[i][col] * newMat[row][i];
             }
         }
-
-
-        //swap contents in matrix
-        vector<double> * sw1 = ret->getRow(row);
-        vector<double> * sw2 = ret->getRow(i);
-
-
-        scale(ret->get(row, leading), *sw1);
-
-        for (auto it = sw1->begin(); it != sw1->end(); it++)
-            ret->set(row, *it - sw1->begin(), *it);
-        for (auto it = sw2->begin(); it != sw2->end(); it++)
-            ret->set(row, *it - sw2->begin(), *it);
     }
-    return NULL;
+    Matrix * m = new Matrix(newMat);
+    m->isLU = true;
+    return m;
 }
 
 Matrix* Matrix::inverse(){
@@ -124,7 +117,13 @@ Matrix* Matrix::inverse(){
 }
 
 Matrix* Matrix::transpose(){
-
+    vector<vector<double> > newMat;
+    for (int j = 0; j < this->colSize(); j++){
+        vector<double> * col = this->getCol(j);
+        newMat.push_back(*col);
+        delete col;
+    }
+    return new Matrix(newMat);
 }
 
 int dot(vector<double> a, vector<double> b){
@@ -174,9 +173,11 @@ double Matrix::determinant(){
 ostream& operator<<(ostream& out, const Matrix & m){
     for (int i = 0; i < m.rows; i++){
         for (int j = 0; j < m.cols; j++){
-            out << (*(*(m.values))[i])[j] << " ";
+            out << (*(*(m.values))[i])[j] << "\t";
         }
         out << endl;
     }
+    if (m.isLU)
+        cout << "In LU Form";
     return out;
 }

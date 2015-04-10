@@ -20,12 +20,15 @@ Matrix getM1(){
 
 Matrix getM2(){
     vector<double> v1, v2, v3;
-    v1.push_back(1);
     v1.push_back(2);
-    v2.push_back(3);
-    v2.push_back(4);
-    v3.push_back(5);
-    v3.push_back(6);
+    v1.push_back(1);
+    v1.push_back(4);
+    v2.push_back(-4);
+    v2.push_back(0);
+    v2.push_back(6);
+    v3.push_back(1);
+    v3.push_back(1);
+    v3.push_back(2);
 
     vector<vector<double> > mat;
 
@@ -38,7 +41,7 @@ Matrix getM2(){
 }
 
 int main(){
-    Matrix m = getM1();
+    Matrix m = getM2();
+    cout << *m.lu() << endl;
     cout << m << endl;
-    cout << *m.add(m) << endl;
 }

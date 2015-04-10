@@ -8,6 +8,7 @@
 class Matrix{
     int rows;
     int cols;
+    bool isLU;
     std::vector<std::vector<double>*> * values;
 
     public:
@@ -32,12 +33,12 @@ class Matrix{
         double get (int i, int j);
 
         //Matrix operations
-        M
-            trix* rref() const;
+        Matrix* lu();
         Matrix* inverse();
         Matrix* transpose();
         Matrix* mult(const Matrix&);
-        Matrix* add(Matrix B);
+        Matrix* add(Matrix);
+        vector<double> * solve(vector<double>*);
         double determinant();
 
         //Matrix output
