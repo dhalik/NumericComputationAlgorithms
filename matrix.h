@@ -14,8 +14,27 @@ class Matrix{
     bool isLU;
     std::vector<std::vector<T>*> * values;
 
-    public:
+    //subtract two std::vectors
+    std::vector<T> sub(std::vector<T> a, std::vector<T> b){
+        for (auto it = a.begin(); it != a.end(); it++)
+            *it - b[it - a.begin()];
+        return a;
+    }
 
+    //scale a given std::vector by s
+    void scale(T s, std::vector<T>& a){
+        for (auto it = a.begin(); it != a.end(); it++)
+            *it *= s;
+    }
+
+    T dot(std::vector<T> a, std::vector<T> b){
+        T total =0 ;
+        for (int i = 0; i < a.size(); i++)
+            total += a[i] * b[i];
+        return total;
+    }
+
+    public:
         Matrix(int cols, int rows):cols(cols), rows(rows){
             isLU = false;
             values = new std::vector<std::vector<T>* >();
@@ -86,18 +105,7 @@ class Matrix{
             return (*(*values)[row])[col];
         }
 
-        //subtract two std::vectors
-        std::vector<T> sub(std::vector<T> a, std::vector<T> b){
-            for (auto it = a.begin(); it != a.end(); it++)
-                *it - b[it - a.begin()];
-            return a;
-        }
-
-        //scale a given std::vector by s
-        void scale(T s, std::vector<T>& a){
-            for (auto it = a.begin(); it != a.end(); it++)
-                *it *= s;
-        }
+        // TODO still need to complete pivots
 
         Matrix<T>* lu(){
             std::vector<std::vector<T> > newMat;
@@ -138,12 +146,6 @@ class Matrix{
             return new Matrix<T>(newMat);
         }
 
-        Rational dot(std::vector<T> a, std::vector<T> b){
-            Rational total =0 ;
-            for (int i = 0; i < a.size(); i++)
-                total += a[i] * b[i];
-            return total;
-        }
 
         Matrix<T>* mult(const Matrix<T>& B){
             int rowSize = this->rowSize();
