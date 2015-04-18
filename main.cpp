@@ -1,6 +1,6 @@
-#include "matrix.h"
+#include "matrix/matrix.h"
 #include <iostream>
-#include "rational.h"
+#include "matrix/rational.h"
 
 using namespace std;
 

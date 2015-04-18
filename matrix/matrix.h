@@ -116,13 +116,13 @@ class Matrix{
                 delete col;
             }
 
-            for (int i = 0; i < newMat.begin()->size(); i++){
+            for (unsigned int i = 0; i < newMat.begin()->size(); i++){
                 // i is the current pivot
                 T pivot = newMat[i][i];
-                for (int row = i + 1; row < newMat.size(); row++){
+                for (unsigned int row = i + 1; row < newMat.size(); row++){
                     newMat[row][i] = newMat[row][i] / pivot;
                     //adjust row value for pivot value change
-                    for (int col = i + 1; col < newMat.begin()->size(); col++){
+                    for (unsigned int col = i + 1; col < newMat.begin()->size(); col++){
                         newMat[row][col] = newMat[row][col] - newMat[i][col] * newMat[row][i];
                     }
                 }

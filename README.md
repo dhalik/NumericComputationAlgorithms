@@ -1,2 +1,2 @@
 # NumericComputationAlgorithms
-A repository of algorithms from numeric computation 
+A collection of algorithms from numeric computation 
