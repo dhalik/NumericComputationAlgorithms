@@ -1,7 +1,10 @@
 CC=g++
-CFLAGS=-c -Wall -std=c++0x
-SOURCES=./main.cpp ./polynomial/polynomialInterpolation.cpp ./matrix/rational.cpp
-OBJECTS=$(SOURCES:.cpp=.o)
+CFLAGS=-c -Wall -std=c++0x -MMD
+BIN=./bin/
+SRC=./src/
+FILES=main.cpp polynomial/polynomialInterpolation.cpp matrix/rational.cpp
+SOURCES=$(addprefix $(SRC), $(FILES))
+OBJECTS=$(addprefix $(BIN), $(FILES:.cpp=.o))
 EXECUTABLE=main
 
 all: $(SOURCES) $(EXECUTABLE)
@@ -9,8 +12,11 @@ all: $(SOURCES) $(EXECUTABLE)
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@
 
-.cpp.o:
-	$(CC) $(CFLAGS) $< -o $@
+$(BIN)%.o: $(SRC)%.cpp
+	$(CC) $(CFLAGS) -o $@ $<
 
 test: all
 	./main
+
+clean:
+	rm $(OBJECTS)
