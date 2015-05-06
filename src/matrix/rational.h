@@ -20,9 +20,19 @@ class Rational{
         Rational operator-(const Rational&) const;
         Rational operator/(const Rational&) const;
         Rational operator*(const Rational&) const;
-        Rational operator*(const int&) const;
         Rational operator+=(const Rational&);
         Rational operator-=(const Rational&);
+        Rational operator=(const Rational&);
+
+        Rational operator+(const int&) const;
+        Rational operator*(const int&) const;
+        Rational operator-(const int&) const;
+
+        bool operator<(const Rational&) const;
+        inline bool operator<=(const Rational&) const;
+        inline bool operator>(const Rational&) const;
+        inline bool operator>=(const Rational&) const;
+        bool operator==(const Rational&) const;
 
         int toInt() const;
         double toDouble() const;

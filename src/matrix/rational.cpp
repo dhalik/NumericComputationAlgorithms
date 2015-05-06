@@ -16,6 +16,10 @@ int gcd(int a,int b){
 
 Rational Rational::simplify(){
     int comm = gcd(this->num, this->den);
+    if (num == 0 && den == 0){
+        cout << "this is not right" << *this << endl;
+        return *this;
+    }
     return Rational(this->num / comm, this->den / comm);
 }
 
@@ -36,8 +40,45 @@ Rational Rational::operator+(const Rational& o)const{
     return Rational(newNum, newDen).simplify();
 }
 
+Rational Rational::operator+(const int& o) const{
+    return (*this) + Rational(o);
+}
+
 Rational Rational::operator-(const Rational& o) const{
     return (*this) + (-o);
+}
+
+Rational Rational::operator-(const int& o) const{
+    return (*this) + Rational(-o);
+}
+
+Rational Rational::operator=(const Rational& o) {
+    this->num = o.num;
+    this->den = o.den;
+    return *this;
+}
+
+bool Rational::operator<(const Rational& o) const{
+    return o.den * this->num < o.num * this->den;
+}
+
+bool Rational::operator>(const Rational& o) const{
+    return o < *this;
+}
+
+bool Rational::operator<=(const Rational& o) const{
+    return ! (*this > o);
+}
+
+bool Rational::operator>=(const Rational& o) const{
+    return ! (*this < o);
+}
+
+bool Rational::operator==(const Rational& o) const{
+    int comm_o = gcd(o.num, o.den);
+    int comm_this = gcd(this->num, this->den);
+    return (o.num / comm_o == this->num / comm_this) &&
+            (o.den / comm_o == this->den / comm_this);
 }
 
 Rational Rational::operator*(const Rational& o) const{
